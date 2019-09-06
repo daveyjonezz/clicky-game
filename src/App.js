@@ -30,47 +30,47 @@ class App extends Component {
     return true;
   }
 
-  youWon = () => {
-    if (this.state.score > this.state.highscore) {
-      this.setState({highscore: this.state.score}, function() {
-        console.log(this.state.highscore);
-      });
-    }
-    this.state.friends.forEach(friends => {
-      friends.clicked = false;
-    });
-    this.setState({mid: `Congrats you won!!`});
-    this.setState({score: 0});
-    this.setState({colorStyle: "text-success"})
-    return true;
-  }
+  gameWon = () => {
+    this.setState({highscore: 12}, function() {
+      console.log(this.state.highscore);
+    })
+  this.state.friends.forEach(friends => {
+    friends.clicked = false;
+  });
+  this.setState({mid: `Congrats you won!!`});
+  this.setState({score: 0});
+  this.setState({colorStyle: "text-success"})
+  return true;
+}
 
-  clickFriend = id => {
-    // Filter this.state.friends for friends with an id not equal to the id being removed
-    const friends = this.state.friends.map(friend => { 
-      if(friend.id === id){
-        if(friend.clicked === false){
-          friend.clicked = true
-          this.setState({score : this.state.score + 1}, function(){
-            console.log(this.state.score);
-          });
-          this.setState({mid: `Oooh keep clicking!!`});
-          this.setState({colorStyle: "text-success"})
-          if(this.state.score === 12){
-            this.youWon()
-          }
+clickFriend = id => {
+  // Filter this.state.friends for friends with an id not equal to the id being removed
+  const friends = this.state.friends.map(friend => { 
+    if(friend.id === id){
+      if(friend.clicked === false){
+        friend.clicked = true
+        if (this.state.score === 11) {
+          console.log("winner winner")
+          this.gameWon();
         } else {
-          this.gameOver()
-        }
+        this.setState({score : this.state.score + 1}, function(){
+          console.log(this.state.score);
+          this.setState({mid: `Oooh keep clicking!!`});
+          this.setState({colorStyle: "text-info"})
+        });
       }
-      return friend
-    });
-    // Set this.state.friends equal to the new friends array
-    this.setState({ friends });
+      } else {
+        this.gameOver()
+      }
+    }
+    return friend
+  });
+  // Set this.state.friends equal to the new friends array
+  this.setState({ friends });
 
-    const newArray = this.state.friends.sort(()=> Math.random()-0.5)
-    this.setState({friends: newArray})
-  };
+  const newArray = this.state.friends.sort(()=> Math.random()-0.5)
+  this.setState({friends: newArray})
+};
 
   // Map over this.state.friends and render a FriendCard component for each friend object
   render() {
